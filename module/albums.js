@@ -45,3 +45,27 @@ export const deleteAlbum = async(arg)=>{
     data.message = `The album was deleted from the database`;
     return data;
 }
+
+const validateUpdateAlbum = async({id, albumData}) => {
+    if (typeof id !== "string" || id === undefined) return {status: 406, message: "The album to update does not exist"};
+    if (typeof albumData !== "object" || albumData === undefined) return {status: 406, message: "Invalid album data"};
+}
+export const updateAlbum = async(arg) => {
+    let val = await validateUpdateAlbum(arg);
+    if (val) return val;
+    
+    let config = {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(arg.albumData)
+    }
+
+    let res = await fetch(`http://172.16.101.146:5802/albums/${arg.id}`, config);
+    if (res.status === 404) return {status: 204, message: "The album you want to update is not registered in albums"};
+    if (!res.ok) return {status: res.status, message: "An error occurred while updating the album"};
+    
+    let data = await res.json();
+    data.status = 202;
+    data.message = "The album was updated in the database";
+    return data;
+}

@@ -66,4 +66,34 @@ export const deletePost = async (arg) => {
     return data;
 }
 
+const validateUpdatePost = async (postData) => {
+    if (
+        typeof postData.userId !== "number" || 
+        typeof postData.id !== "string" || 
+        typeof postData.title !== "string" || 
+        typeof postData.body !== "string"
+    ) {
+        return { status: 406, message: `Invalid post data` };
+    }
+}
+
+export const updatePost = async (postData) => {
+    let val = await validateUpdatePost(postData);
+    if (val) return val;
+
+    let config = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(postData)
+    }
+
+    let res = await fetch(`http://172.16.101.146:5800/posts/${postData.id}`, config);
+    if (res.status === 404) 
+        return { status: 204, message: `The post you want to update is not registered` };
+
+    let data = await res.json();
+    data.status = 200;
+    data.message = `The post data was updated successfully`;
+    return data;
+}
 

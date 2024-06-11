@@ -1,7 +1,7 @@
 
 import { getUser } from "./user.js"
 export const getAllAlbums = async() => {
-    let res = await fetch("http://172.16.101.146:5800/albums");
+    let res = await fetch("http://172.16.101.146:5801/comments");
     let data = await res.json();
     return data;
 }

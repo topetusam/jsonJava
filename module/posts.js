@@ -41,3 +41,29 @@ export const addPosts = async (posts) => {
     let data = await res.json();
     return data;
 }
+
+const validateDeletePost = async ({ id }) => {
+    if (typeof id !== "string" || id === undefined) 
+        return { status: 406, message: `The post to search does not exist` }
+}
+
+export const deletePost = async (arg) => {
+    let val = await validateDeletePost(arg);
+    if (val) return val;
+
+    let config = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+    }
+
+    let res = await fetch(`http://172.16.101.146:5800/posts/${arg.id}`, config);
+    if (res.status === 404) 
+        return { status: 204, message: `The post you want to delete is not registered` }
+
+    let data = await res.json();
+    data.status = 202;
+    data.message = `The post was deleted from the database`;
+    return data;
+}
+
+

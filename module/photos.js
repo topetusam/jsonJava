@@ -23,7 +23,7 @@ const addPhoto = async (photoData) => {
         body: JSON.stringify(photoData)
     }
 
-    let res = await fetch("http://172.16.101.146:5800/photos", config);
+    let res = await fetch("http://172.16.101.146:5803/photos", config);
     let data = await res.json();
     return data;
 }
@@ -38,7 +38,7 @@ const deletePhoto = async (photoId) => {
         headers: { "Content-Type": "application/json" }
     }
 
-    let res = await fetch(`http://172.16.101.146:5800/photos/${photoId}`, config);
+    let res = await fetch(`http://172.16.101.146:5803/photos/${photoId}`, config);
     if (res.status === 404) 
         return { status: 204, message: `The photo you want to delete is not registered` };
 
@@ -63,7 +63,7 @@ const updatePhoto = async (photoId, updatedPhotoData) => {
         body: JSON.stringify(updatedPhotoData)
     }
 
-    let res = await fetch(`http://172.16.101.146:5800/photos/${photoId}`, config);
+    let res = await fetch(`http://172.16.101.146:5803/photos/${photoId}`, config);
     if (res.status === 404) 
         return { status: 204, message: `The photo you want to update is not registered` };
 

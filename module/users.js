@@ -1,6 +1,6 @@
 import { getUser } from "./user.js"
 export const getAllAlbums = async() => {
-    let res = await fetch("http://172.16.101.146:5800/albums");
+    let res = await fetch("http://172.16.101.146:5804/users");
     let data = await res.json();
     return data;
 }
@@ -36,7 +36,7 @@ const addUser = async (userData) => {
         body: JSON.stringify(userData)
     }
 
-    let res = await fetch("http://172.16.101.146:5800/users", config);
+    let res = await fetch("http://172.16.101.146:5804/users", config);
     let data = await res.json();
     return data;
 }
@@ -51,7 +51,7 @@ const deleteUser = async (userId) => {
         headers: { "Content-Type": "application/json" }
     }
 
-    let res = await fetch(`http://172.16.101.146:5800/users/${userId}`, config);
+    let res = await fetch(`http://172.16.101.146:5804/users/${userId}`, config);
     if (res.status === 404) 
         return { status: 204, message: `The user you want to delete is not registered` };
 
@@ -92,7 +92,7 @@ const updateUser = async (userData) => {
         body: JSON.stringify(userData)
     }
 
-    let res = await fetch(`http://172.16.101.146:5800/users/${userData.id}`, config);
+    let res = await fetch(`http://172.16.101.146:5804/users/${userData.id}`, config);
     if (res.status === 404) 
         return { status: 204, message: `The user you want to update is not registered` };
 

@@ -4,7 +4,6 @@ export const getAllAlbums = async() => {
     let data = await res.json();
     return data;
 }
-º
 const validateAddAlbum = async({userId, title}) => {
     if (typeof userId !== "string" || userId === undefined) return { status: 406, mensaje: "userId is invalid"};
     if (typeof title !== "string" || title === undefined)  return { status: 406, mensaje: "title is invalid" };

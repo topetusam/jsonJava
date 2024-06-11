@@ -1,6 +1,6 @@
 import { getUser } from "./user.js"
 export const getAllAlbums = async() => {
-    let res = await fetch("http://172.16.101.146:5802/albums");
+    let res = await fetch("http://172.16.101.146:5800/albums");
     let data = await res.json();
     return data;
 }
@@ -20,7 +20,7 @@ export const addAlbum = async(arg)=>{
         body: JSON.stringify(arg),
 }
 
-let res =await fetch("http://172.16.101.146:5802/albums", config);
+let res =await fetch("http://172.16.101.146:5800/albums", config);
 let data = await res.json();
 return data;id
 }
@@ -38,7 +38,7 @@ export const deleteAlbum = async(arg)=>{
         headers: {"Content-Type": "application/json"}
     }
 
-    let res =await fetch(`http://172.16.101.146:5802/albums/${arg.id}`, config);
+    let res =await fetch(`http://172.16.101.146:5800/albums/${arg.id}`, config);
     if(res.status===404) return {status: 204, message: `The album you want to deleate is not registered in albums`}
     let data = await res.json();
     data.status = 202
@@ -60,7 +60,7 @@ export const updateAlbum = async(arg) => {
         body: JSON.stringify(arg.albumData)
     }
 
-    let res = await fetch(`http://172.16.101.146:5802/albums/${arg.id}`, config);
+    let res = await fetch(`http://172.16.101.146:5800/albums/${arg.id}`, config);
     if (res.status === 404) return {status: 204, message: "The album you want to update is not registered in albums"};
     if (!res.ok) return {status: res.status, message: "An error occurred while updating the album"};
     

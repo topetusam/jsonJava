@@ -1,4 +1,4 @@
-import { getAllAlbums , addAlbum, deleteAlbum, updateAlbum} from "../modules/albums.js";
+import { getAllAlbums , addAlbum, deleteAlbum, updateAlbum} from "../module/albums.js";
 import { addPost } from "../module/post.js";
 
 let menuAlbums =async() => {

@@ -66,34 +66,54 @@ export const deletePost = async (arg) => {
     return data;
 }
 
-const validateUpdatePost = async (postData) => {
-    if (
-        typeof postData.userId !== "number" || 
-        typeof postData.id !== "string" || 
-        typeof postData.title !== "string" || 
-        typeof postData.body !== "string"
-    ) {
-        return { status: 406, message: `Invalid post data` };
+const validateUpdatePost = async(id)=>{
+    if(typeof id != "string" || id == undefined){
+        return false
     }
+    let res = await fetch (`http://172.16.101.146:5800/posts/${id}`)
+    if (res.status == 404){
+        alert("The Id does not exist")
+        return false
+    }
+    return true;
 }
 
-export const updatePost = async (postData) => {
-    let val = await validateUpdatePost(postData);
-    if (val) return val;
+export const UpdatePosts = async()=>{
+    let id = prompt("Ingrese el Id de los posts que desea actualizar: ")
+    if(!id){
+        alert("ID no proporcionado")
+        return false
+    }
+    if (!(await validateUpdatePost(id))){
+        console.log("El ID no es válido o no existe");
+        return false;
+    }
+    let argRes = await fetch (`http://172.16.101.146:5800/posts/${id}`)
+    let arg = await argRes.json();
+
+    let newUserId = prompt("Ingrese nuevo userId (deje en blanco para mantener): ");
+    if (newUserId) {
+        arg.userId = newUserId;
+    }
+
+    let newtitle = prompt("Ingrese nuevo title (deje en blanco para mantener): ");
+    if (newtitle) {
+        arg.title = newtitle;
+    }
+    let newBody = prompt("Ingrese nuevo body (deje en blanco para mantener): ");
+    if (newBody) {
+        arg.body = newBody;
+    }
+
 
     let config = {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postData)
-    }
-
-    let res = await fetch(`http://172.16.101.146:5800/posts/${postData.id}`, config);
-    if (res.status === 404) 
-        return { status: 204, message: `The post you want to update is not registered` };
-
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(arg)
+    };
+    let res = await fetch (`http://172.16.101.146:5800/posts/${arg.id}`, config);
     let data = await res.json();
-    data.status = 200;
-    data.message = `The post data was updated successfully`;
-    return data;
-}
+    alert("Posts Actualizado");
+    return data; 
 
+}

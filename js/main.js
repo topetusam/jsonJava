@@ -1,8 +1,8 @@
-import { getAllAlbums , addAlbum, deleteAlbum, updateAlbum} from "../module/albums.js";
-import { addPost } from "../module/post.js";
-import { deletePost } from "../module/post.js";
-import { updatePost } from "../module/post.js";
-
+import { getAllAlbums , addAlbum, deleteAlbum, updateAlbum } from "../modules/albums";
+import { addPost, getAllPosts, deletePost, updatePost } from "../module/posts.js";
+import { addPhoto, getAllPhotos, deletePhoto, updatePhoto } from "../module/photos.js";
+import { getAllComments, addComments, deleteComments, UpdateComments } from "../module/comments.js";
+import { getAllUsers, addUser, deleteUser, updateUser } from "../module/users.js";
 
 let menuAlbums = async () => {
     let menu = prompt(`
@@ -17,9 +17,9 @@ let menuAlbums = async () => {
         return await getAllAlbums();
     }
     if (menu == 2) {
-        let userId = prompt("Enter the user id: ", "10");
-        let title = prompt("Enter the album title: ", "Gallery");
-        return await addAlbum({ userId, title });
+        let userId = prompt("Enter the userId: ", "10")
+    let title = prompt("Enter the album title: ", "Gallery")
+    return await addAlbum({userId, title});
     }
     if (menu == 3) {
         let id = prompt("Enter the ID of the album you want to delete");
@@ -122,6 +122,35 @@ let menuUsers = async () => {
         return await updateUser({ id, name, username, email });
     }
 };
+
+let menuComments = async() => {
+    let menu = prompt(`
+    ¿ Comments Menu ?
+        1. Search All
+        2. Add
+        3. Delete 
+        4. Update
+    `, 1);
+    menu = Number(menu);
+    if(menu==1){
+        return await getAllComments();
+    }
+    if(menu==2){
+        let postId = prompt("Enter the postId: ", "10");
+        let name = prompt("Enter the name: ", "gonzalo");
+        let email = prompt("Enter the email: ", "gonzaaa@gmail.com")
+        let body = prompt("Enter the body: ", " beltran :)")
+        return await addComments ({postId, name, email, body});
+    }
+    if(menu ==3){
+        let id= prompt("Enter to ID of comments you want to delete")
+        return await deleteComments({id});
+    }
+    if(menu == 4){
+        return await UpdateComments();
+    }
+}
+
 
 let opc = null;
 do {

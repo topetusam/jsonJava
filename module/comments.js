@@ -49,28 +49,58 @@ const deleteComment = async (commentId) => {
     return data;
 }
 
-const updateComment = async (commentId, updatedCommentData) => {
-    // Validación de los parámetros de entrada
-    if (
-        typeof commentId !== "string" || commentId === undefined ||
-        typeof updatedCommentData !== "object" || updatedCommentData === undefined
-    ) {
-        return { status: 406, message: `Invalid parameters` };
+const validateUpdateComments = async({id})=>{
+    if(typeof id != "string" || id == undefined){
+        return false
+    }
+    let res = await fetch (`http://172.16.101.146:5801/comments/${id}`)
+    if (res.status == 404){
+        alert("The Id does not exist")
+        return false
+    }
+    return true;
+}
+
+export const UpdateComments = async()=>{
+    let id = prompt("Ingrese el Id de los comentarios que desea actualizar: ")
+    if(!id){
+        alert("ID no proporcionado")
+        return false
+    }
+    if (!(await validateUpdateComments(id))){
+        console.log("El ID no es válido o no existe");
+        return false;
+    }
+    let argRes = await fetch (`http://172.16.101.146:5801/comments/${id}`)
+    let arg = await argRes.json();
+
+    let newpostId = prompt("Ingrese nuevo postId (deje en blanco para mantener): ");
+    if (newpostId) {
+        arg.postId = newpostId;
     }
 
+    let newName = prompt("Ingrese nuevo name (deje en blanco para mantener): ");
+    if (newName) {
+        arg.name = newName;
+    }
+    let newEmail = prompt("Ingrese nuevo email (deje en blanco para mantener): ");
+    if (newEmail) {
+        arg.email = newEmail;
+    }
+
+    let newBody = prompt("Ingrese nuevo body (deje en blanco para mantener): ");
+    if (newBody) {
+        arg.body = newBody;
+    };
     let config = {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedCommentData)
-    }
-
-    let res = await fetch(`http://172.16.101.146:5801/comments/${commentId}`, config);
-    if (res.status === 404) 
-        return { status: 204, message: `The comment you want to update is not registered` };
-
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(arg)
+    };
+    let res = await fetch (`http://172.16.101.146:5801/comments/${arg.id}`, config);
     let data = await res.json();
-    data.status = 200;
-    data.message = `The comment data was updated successfully`;
-    return data;
+    alert("Comment Actualizado");
+    return data; 
+
 }
 

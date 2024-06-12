@@ -45,26 +45,53 @@ export const deleteAlbum = async(arg)=>{
     return data;
 }
 
-const validateUpdateAlbum = async({id, albumData}) => {
-    if (typeof id !== "string" || id === undefined) return {status: 406, message: "The album to update does not exist"};
-    if (typeof albumData !== "object" || albumData === undefined) return {status: 406, message: "Invalid album data"};
-}
-export const updateAlbum = async(arg) => {
-    let val = await validateUpdateAlbum(arg);
-    if (val) return val;
+const validateUpdateAlbum = async (id) => {
+    if (typeof id !== "string" || id === undefined) {
+        return false;
+    }
     
+    let res = await fetch(`http://172.16.101.146:5802/albums/${id}`);
+    if (res.status === 404) {
+        console.log("The Id does not exist");
+        return false;
+    }
+    return true;
+}
+
+export const updateAlbum = async () => {
+    let id = prompt("Ingrese el ID del álbum que desea actualizar");
+    if (!id) {
+        console.log("ID no proporcionado");
+        return;
+    }
+
+    if (!(await validateUpdateAlbum(id))) {
+        console.log("El ID no es válido o no existe");
+        return;
+    }
+
+    let argRes = await fetch(`http://172.16.101.146:5802/albums/${id}`);
+    let arg = await argRes.json();
+
+    let newUserId = prompt("Ingrese nuevo userId (deje en blanco para mantener): ");
+    if (newUserId) {
+        arg.userId = newUserId;
+    }
+
+    let newTitle = prompt("Ingrese nuevo título (deje en blanco para mantener): ");
+    if (newTitle) {
+        arg.title = newTitle;
+    }
+
     let config = {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(arg.albumData)
-    }
+        body: JSON.stringify(arg)
+    };
 
     let res = await fetch(`http://172.16.101.146:5802/albums/${arg.id}`, config);
-    if (res.status === 404) return {status: 204, message: "The album you want to update is not registered in albums"};
-    if (!res.ok) return {status: res.status, message: "An error occurred while updating the album"};
-    
     let data = await res.json();
-    data.status = 202;
-    data.message = "The album was updated in the database";
+    console.log("Álbum actualizado");
     return data;
 }
+
